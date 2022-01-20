@@ -1,5 +1,21 @@
 {
+	"name": "jsi-vue-edition",
+	"description": "JSI[just,save,it] the most SUPER SUPREME storage wrapper",
+	"author": {
+		"name": "Realfakenerd"
+	},
+	"version": "0.0.1",
+	"scripts": {
+		"build": "rollup -c rollup.config.js"
+	},
+	"main": "storage-watcher.cjs",
+	"module": "storage-watcher.esm.js",
 	"devDependencies": {
-		"parcel": "^2.2.1"
+		"rollup": "^2.64.0"
+	},
+	"type": "module",
+	"dependencies": {
+		"eslint": "^8.7.0",
+		"vue": "^3.2.27"
 	}
 }
