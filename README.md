@@ -6,7 +6,7 @@
     <a href="https://github.com/realfakenerd/jsi" alt="LINK GitHub package.json version (subfolder of monorepo)"> <img alt="GitHub package.json version (subfolder of monorepo)" src="https://img.shields.io/github/package-json/v/realfakenerd/jsi?color=lightblue&style=flat-square"> </a>
     <a href="https://github.com/realfakenerd/jsi" alt="LINK GitHub package.json version (subfolder of monorepo)"><img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/realfakenerd/jsi?color=blue&style=flat-square">
     </a>
-
+    
 </p>
 
 It's small, easy and agnostic, runs on every framework or with vanilla Js, it automatically stringify **data** and if the data it's already a string, it doesn't stringify, just save the data as it is. JSI also have type anotations to help with intellisense and a mini tutorial on the lib.
