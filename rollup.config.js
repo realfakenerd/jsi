@@ -11,7 +11,7 @@ import {terser} from 'rollup-plugin-terser'
 
 const banner = `
     /*!
-    * JSI[just,save,it] for vue - v${pkg.version}
+    * JSI[just,save,it] - v${pkg.version}
     * the most SUPER SUPREME of the storage wrappers (͠≖ ͜ʖ͠≖)👌
     * ${new Date().getFullYear()} - RealFakeNerd
     * @license MIT
@@ -22,9 +22,11 @@ const banner = `
 
 /** @type {Array<ConfigDef>} */
 const configs = [
-    { input: 'src/main.js' ,file: 'dist/jsi.esm.js', format: 'es', env: 'production' },
-    { input: 'dist/jsi.esm.js' ,file: 'dist/jsi.cjs.js', format: 'cjs', env: 'production' },
-    { input: 'dist/jsi.cjs.js' ,file: 'dist/jsi.global.js', format: 'iife', env: 'production' }
+    { file: 'dist/jsi-dev.mjs', format: 'es', env: 'development' },
+    { file: 'dist/jsi-dev.cjs', format: 'cjs', env: 'development' },
+    { file: 'dist/jsi-dev.iife.js', format: 'iife', env: 'development' },
+    { file: 'dist/jsi.min.mjs', format: 'es', env: 'production', browser: true },
+    { file: 'dist/jsi.min.js', format: 'iife', env: 'production', browser: true },
 ]
 
 /**
@@ -38,10 +40,11 @@ function createEntries(config) {
  * @param {ConfigDef} config 
  */
 function createEntry(config) {
+    const isBrowser = config.browser && config.env === 'production';
+
     /** @type {import('rollup').RollupOptions} */
     const c = {
-        external: ['vue'],
-        input: config.input,
+        input: 'src/main.js',
         plugins: [terser({
             compress: {
                 ecma: 2020,
@@ -49,8 +52,7 @@ function createEntry(config) {
                 module: config.format === 'es' ? true : false
             },
             format: {
-                comments: 'all',
-                wrap_iife: true
+                comments: isBrowser ? 'some' : 'all',
             }
         })],
         output: {
@@ -58,9 +60,6 @@ function createEntry(config) {
             inlineDynamicImports: true,
             file: config.file,
             format: config.format,
-            globals: {
-                vue: 'Vue'
-            }
         },
         onwarn: (msg, warn) => {
             // @ts-ignore
@@ -76,7 +75,6 @@ function createEntry(config) {
         // @ts-ignore
         c.output.preferConst = true 
     }
-
     return c
 }
 

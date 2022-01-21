@@ -9,7 +9,7 @@
     "include": [
         "src/**/*.js",
         "./*.js",
-        ".eslintrc.cjs"
+        "test/**/*.js"
     ],
     "exclude": [
         "node_modules",

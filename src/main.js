@@ -1,5 +1,3 @@
-import { reactive } from 'vue';
-
 function StorageWatcher() {
 
     /**
@@ -15,10 +13,9 @@ function StorageWatcher() {
      * 
      * @param {string} name use it to name the storage
      * @param {any} state can be any kind of data
-     * @param {'local' | 'session'} [type = 'local']
      * @returns {void} nothing is returned!
      */
-    function set(name, state, type = 'local') {
+    function set(name, state) {
         if (typeof state === 'string') {
             localStorage.setItem(name, state);
             return
@@ -49,9 +46,9 @@ function StorageWatcher() {
      */
     function get(key) {
         /** @type {Object} */
-        const data = JSON.stringify(localStorage.getItem(key));
+        const data = JSON.parse(localStorage.getItem(key));
         if (key in localStorage) {
-            return reactive(data)
+            return data
         } else {
             const err = new Error
             err.name = 'GetItem Key Error'
@@ -59,10 +56,20 @@ function StorageWatcher() {
             throw err
         }
     }
-
+    
+    
     /**
+     * ### Remove function
+     * #### remove an key from the storage
+     * It removes the given key from the localStorage,
+     * if there's no key to remove an Error is thrown
+     * so be sure to give the right name
+     * 
+     * @example
+     * useStorage.remove('sw')
      * 
      * @param {string} key 
+     * @returns {void}
      */
     function remove(key) {
         if (key in localStorage) {
@@ -75,6 +82,10 @@ function StorageWatcher() {
         }
     }
 
+    /**
+     * # THE AWESOME CLEAR FUNCTION
+     * ### it's self explanatory, clears all localStorage
+     */
     function clear() {
         localStorage.clear();
     }

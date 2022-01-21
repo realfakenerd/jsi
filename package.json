@@ -1,21 +1,46 @@
 {
-	"name": "jsi-vue-edition",
-	"description": "JSI[just,save,it] the most SUPER SUPREME storage wrapper",
-	"author": {
-		"name": "Realfakenerd"
-	},
-	"version": "0.0.1",
-	"scripts": {
-		"build": "rollup -c rollup.config.js"
-	},
-	"main": "storage-watcher.cjs",
-	"module": "storage-watcher.esm.js",
-	"devDependencies": {
-		"rollup": "^2.64.0"
-	},
-	"type": "module",
-	"dependencies": {
-		"eslint": "^8.7.0",
-		"vue": "^3.2.27"
-	}
+  "name": "jsi-just-save-it",
+  "version": "1.0.0",
+  "description": "JSI[just,save,it] the most SUPER SUPREME storage wrapper",
+  "author": {
+    "name": "Realfakenerd",
+    "url": "https://github.com/realfakenerd"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/realfakenerd/jsi"
+  },
+  "homepage": "https://github.com/realfakenerd/jsi#readme",
+  "bugs": {
+    "url": "https://github.com/realfakenerd/jsi/issues"
+  },
+  "scripts": {
+    "build": "rollup -c rollup.config.js"
+  },
+  "main": "jsi-dev.cjs",
+  "module": "jsi-dev.mjs",
+  "unpkg": "dist/jsi.min.js",
+  "jsdelivr": "dist/jsi.min.js",
+  "devDependencies": {
+    "rollup": "^2.64.0",
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.5.0"
+  },
+  "keywords": [
+    "storage",
+    "localstorage",
+    "local-storage",
+    "memorystroage",
+    "sessionstorage",
+    "session-storage",
+    "memory-stroage",
+    "vue-plugin",
+    "watch",
+    "es6-modules"
+  ],
+  "private": false
 }
