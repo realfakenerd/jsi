@@ -13,12 +13,12 @@ It's small, easy and agnostic, runs on every framework or with vanilla Js, it au
 
 TODOS:
 
-- make it selects between local and session storage
+- ~~make it selects between local and session storage~~ ✔
 - make better and smarter 'ifs' and/or 'switches
 - make the logo
 - make an Doc page an site
-- host it on most CDNs
-- make callbacks to give you awesome dev granular control over the localStorage
+- ~~host it on most CDNs~~ ✔
+- make callbacks to give you awesome dev an granular control over the localStorage
 - make more todos and finalizes these Promises() above :)
 
 ## Instalation:
@@ -31,12 +31,8 @@ yarn add jsi-just-save-it // better on yarn
 
 pnpm add jsi-just-save-it // even better on pnpm
 
-<script src="https://cdn.jsdelivr.net/npm/jsi-just-save-it">
-/** use it as an iife from jsdelivr */
-</script>
-<script src="https://unpkg.com/jsi-just-save-it@1.0.0/dist/jsi.min.js">
-/** or from unpkg */
-</script>
+<script src="https://cdn.jsdelivr.net/npm/jsi-just-save-it"> // use it as an iife from jsdelivr
+<script src="https://unpkg.com/jsi-just-save-it@1.0.0/dist/jsi.min.js"> // or from unpkg
 
 ```
 
@@ -53,7 +49,13 @@ const data = {
 
 const jsi = useJSIStorage();
 
-jsi.set("sw", data); // saves it to the localStorage
+jsi.set("sw", data); // saves it to the localStorage by default
+
+jsi.set("sw", data, {
+    expire: 1000 * 60, // will expire after 1min
+    type: 'session', // values can be 'session' | 'local'
+    prefix: 'Skywalker_Saga_' // the key name will be Skywalker_Saga_sw, by default it is _JSI_
+})
 
 jsi.set("sw - films"); // throws an error, so be sure to put some data
 
