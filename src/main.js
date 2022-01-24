@@ -1,5 +1,20 @@
-function StorageWatcher() {
+import errLogger from "./ErrorLog.js";
+import { parseObj, isLocalOrSession, stringifyObj } from "./utils.js";
 
+const defaultStorageType = localStorage
+const defaultPrefix = '_JSI_';
+/**
+ * @typedef OptDef
+ * @property {number} [expire]
+ * @property {'local' | 'session'} [type]
+ * @property {string} [prefix = '_jsi_']
+ */
+
+/**
+ * The main class 'useJSIStorage' to do all operations.
+ * @classdesc Main Storage class
+ */
+export default class useJSIStorage {
     /**
      * ### Set function
      * #### set data to the localStorage
@@ -12,22 +27,30 @@ function StorageWatcher() {
      * useStorage.set('sw', data.foo)
      * 
      * @param {string} name use it to name the storage
-     * @param {any} state can be any kind of data
+     * @param {any} thing the state to be saved can be any kind of data
+     * @param {OptDef} [options]
      * @returns {void} nothing is returned!
      */
-    function set(name, state) {
-        if (typeof state === 'string') {
-            localStorage.setItem(name, state);
+    // @ts-ignore
+    static set(name, thing, options = {}) {
+
+        const prefix = options.prefix ? options.prefix : defaultPrefix;
+        const storageType = options.type ? isLocalOrSession(options.type) : defaultStorageType;
+
+        if (typeof thing === 'string') {
+            storageType.setItem(`${prefix}${name}`, thing);
             return
         }
-        if (typeof name !== 'string') {
-            const err = new Error
-            err.name = 'SetItem Key Error'
-            err.message = `'${name}' can't be used as key name, use a 'string' instead`;
-            throw err
-        }
-        let data = JSON.stringify(state)
-        localStorage.setItem(name, data)
+        if (typeof name !== 'string') errLogger.log({
+            name: 'SetItem Key Error!',
+            message: `'${name}' can't be used as key name, use a 'string' instead`
+        })
+        if (!thing) errLogger.log({
+            name: 'SetItem Value Error!',
+            message: `there's no data to be saved, try adding something.`
+        })
+        let strData = stringifyObj(thing, options.expire)
+        storageType.setItem(`${prefix}${name}`, strData)
     }
 
     /**
@@ -44,20 +67,9 @@ function StorageWatcher() {
      * @param {string} key 
      * @returns {any}
      */
-    function get(key) {
-        /** @type {Object} */
-        const data = JSON.parse(localStorage.getItem(key));
-        if (key in localStorage) {
-            return data
-        } else {
-            const err = new Error
-            err.name = 'GetItem Key Error'
-            err.message = `returned data can't be '${data}', this happens if theres no key with the of '${key}'`;
-            throw err
-        }
+    static get(key) {
+        return parseObj(`${defaultPrefix}${key}`, localStorage)
     }
-    
-    
     /**
      * ### Remove function
      * #### remove an key from the storage
@@ -71,31 +83,20 @@ function StorageWatcher() {
      * @param {string} key 
      * @returns {void}
      */
-    function remove(key) {
+    static remove(key) {
         if (key in localStorage) {
-            localStorage.removeItem(key)
-        } else {
-            const err = new Error
-            err.name = 'RemoveItem Key Error'
-            err.message = `data can't be removed if isn't there, try changing '${key}' to another thing`;
-            throw err
-        }
+            localStorage.removeItem(`${defaultPrefix}${key}`)
+        } else errLogger.log({
+            name: 'RemoveItem Key Error!',
+            message: `data can't be removed if isn't there, try changing '${key}' to another thing`
+        })
     }
 
     /**
      * # THE AWESOME CLEAR FUNCTION
      * ### it's self explanatory, clears all localStorage
      */
-    function clear() {
+    static clear() {
         localStorage.clear();
     }
-
-    return {
-        set,
-        get,
-        remove,
-        clear,
-    }
 }
-
-export { StorageWatcher as useJSIStorage }

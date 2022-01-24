@@ -22,9 +22,9 @@ const banner = `
 
 /** @type {Array<ConfigDef>} */
 const configs = [
-    { file: 'dist/jsi-dev.mjs', format: 'es', env: 'development' },
-    { file: 'dist/jsi-dev.cjs', format: 'cjs', env: 'development' },
-    { file: 'dist/jsi-dev.iife.js', format: 'iife', env: 'development' },
+    { file: 'dist/jsi-dev.mjs', format: 'es', env: 'development', browser: false },
+    { file: 'dist/jsi-dev.cjs', format: 'cjs', env: 'development', browser: false },
+    { file: 'dist/jsi-dev.iife.js', format: 'iife', env: 'development', browser: false },
     { file: 'dist/jsi.min.mjs', format: 'es', env: 'production', browser: true },
     { file: 'dist/jsi.min.js', format: 'iife', env: 'production', browser: true },
 ]
@@ -41,25 +41,28 @@ function createEntries(config) {
  */
 function createEntry(config) {
     const isBrowser = config.browser && config.env === 'production';
+    const isDev = !config.browser && config.env === 'development';
+
+    const mini = terser({
+        compress: {
+            ecma: 2020,
+            passes: 3,
+            module: config.format === 'es' ? true : false
+        },
+        format: {
+            comments: isBrowser ? 'some' : 'all',
+        }
+    })
 
     /** @type {import('rollup').RollupOptions} */
     const c = {
         input: 'src/main.js',
-        plugins: [terser({
-            compress: {
-                ecma: 2020,
-                passes: 3,
-                module: config.format === 'es' ? true : false
-            },
-            format: {
-                comments: isBrowser ? 'some' : 'all',
-            }
-        })],
+        plugins: isDev ? [] : [mini],
         output: {
             banner,
             inlineDynamicImports: true,
             file: config.file,
-            format: config.format,
+            format: config.format
         },
         onwarn: (msg, warn) => {
             // @ts-ignore
@@ -67,6 +70,11 @@ function createEntry(config) {
                 warn(msg)
             }
         }
+    }
+
+    if(config.format === 'cjs') {
+        // @ts-ignore
+        c.output.exports = 'auto'
     }
 
     if (config.format === 'iife') {
